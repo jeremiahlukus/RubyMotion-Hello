@@ -47,14 +47,55 @@ class AppDelegate
     #@window.rootViewController = tab_controller 
 
 
-    controller = TapController.alloc.initWithNibName(nil, bundle: nil)
-    nav_controller = UINavigationController.alloc.initWithRootViewController(controller)
-    alphabet_controller = AlphabetController.alloc.initWithNibName(nil, bundle: nil)
+    # controller = TapController.alloc.initWithNibName(nil, bundle: nil)
+    # nav_controller = UINavigationController.alloc.initWithRootViewController(controller)
+    # alphabet_controller = AlphabetController.alloc.initWithNibName(nil, bundle: nil)
 
-    tab_controller = UITabBarController.alloc.initWithNibName(nil, bundle: nil)
-    tab_controller.viewControllers = [alphabet_controller, nav_controller]
-    @window.rootViewController = tab_controller
+    # tab_controller = UITabBarController.alloc.initWithNibName(nil, bundle: nil)
+    # tab_controller.viewControllers = [alphabet_controller, nav_controller]
+    # @window.rootViewController = tab_controller
+
+
+
+    # the points we're going to animate to
+    @points = [[0, 0], [50, 0], [0, 50], [50, 50]]
+    @current_index = 0
+
+    # usual method of adding views to our window
+    @view = UIView.alloc.initWithFrame [@points[@current_index], [100, 100]]
+    @view.backgroundColor = UIColor.blueColor
+    @window.addSubview(@view)
+
+    animate_to_next_point
 
     true
   end
+
+  def animate_to_next_point
+    @current_index += 1
+
+    # keep current_index in the range [0,3]
+    @current_index = @current_index % @points.count
+
+    # UIView.animateWithDuration(2,
+    #                            animations: lambda {
+    #   @view.frame = [@points[@current_index], [100, 100]]
+    # },
+    # completion:lambda {|finished|
+    #   self.animate_to_next_point
+    # }
+
+    UIView.animateWithDuration(2,
+                               delay: 1,
+                               options: UIViewAnimationOptionCurveLinear,
+                               animations: lambda {
+                                 @view.frame = [@points[@current_index], [100, 100]]
+                               }, completion:lambda {|finished|
+                                 self.animate_to_next_point
+                               })
+
+
+  end 
+
+
 end
